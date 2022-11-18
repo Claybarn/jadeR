@@ -178,7 +178,7 @@ def jadeR(X, m=None, verbose=False):
     # Reshaping of the data, hoping to speed up things a little bit...
     X = X.T
     # Dim. of the space of real symm matrices
-    dimsymm = (m * ( m + 1)) / 2
+    dimsymm = int((m * ( m + 1)) / 2)
     # number of cumulant matrices
     nbcm = dimsymm
     # Storage for cumulant matrices
@@ -257,13 +257,13 @@ def jadeR(X, m=None, verbose=False):
         sweep = sweep + 1
         upds  = 0
         Vkeep = V
-
+        
         for p in range(m-1):
             for q in range(p+1, m):
-
+                
                 Ip = arange(p, m*nbcm, m)
                 Iq = arange(q, m*nbcm, m)
-
+                
                 # computation of Givens angle
                 g = concatenate([CM[p,Ip] - CM[q,Iq], CM[p,Iq] + CM[q,Ip]])
                 gg = dot(g, g.T)
@@ -271,7 +271,7 @@ def jadeR(X, m=None, verbose=False):
                 toff = gg[0,1] + gg[1,0]
                 theta = 0.5 * arctan2(toff, ton + sqrt(ton * ton + toff * toff))
                 Gain = (sqrt(ton * ton + toff * toff) - ton) / 4.0
-
+                
                 # Givens update
                 if abs(theta) > seuil:
                     encore = True
@@ -287,7 +287,7 @@ def jadeR(X, m=None, verbose=False):
                               axis=1)
                     On = On + Gain
                     Off = Off - Gain
-
+    
         if verbose: print("completed in %d rotations" % upds)
         updates = updates + upds
     
